@@ -101,6 +101,10 @@
   .nav ul a:not(.pill):hover::after { transform: scaleX(1); }
   .pill { color: var(--bg) !important; background: var(--orange); padding: .45rem 1.15rem !important; border-radius: 4px; font-weight: 600 !important; transition: background .2s; }
   .pill:hover { background: var(--orange-2); }
+  .lang { display: inline-flex; align-items: center; padding: 2px; border: 1px solid var(--line); border-radius: 4px; background: rgba(7,20,39,.6); font-family: var(--mono); font-size: .76rem; font-weight: 500; letter-spacing: .04em; line-height: 1; transition: border-color .2s; }
+  .lang:hover { border-color: rgba(255,159,28,.55); }
+  .lang span { padding: .4rem .55rem; border-radius: 3px; color: var(--muted); transition: background .25s, color .25s; }
+  .lang span.on { background: var(--orange); color: var(--bg); font-weight: 600; }
 
   /* ===== Botões ===== */
   .btn { display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.6rem; border-radius: 4px; font-weight: 600; font-size: 1rem; text-decoration: none; border: 1.5px solid transparent; position: relative; overflow: hidden; isolation: isolate; background: none; transition: transform .25s var(--ease), color .3s, border-color .3s; will-change: transform; }
@@ -321,7 +325,7 @@
     .stamps { grid-template-columns: repeat(2, 1fr); }
     .boms { grid-template-columns: 1fr; }
     .edu { grid-template-columns: 1fr; }
-    .nav ul li:not(:last-child) { display: none; }
+    .nav ul li:not(.keep) { display: none; }
   }
   @media (max-width: 640px) {
     .specs { grid-template-columns: 1fr; }
@@ -389,7 +393,8 @@
         <li><a href="#formacao">Formação</a></li>
         <li><a href="#certificacoes">Certificações</a></li>
         <li><a href="#especialidades">Especialidades</a></li>
-        <li><a href="#contato" class="pill" data-magnetic>Contato</a></li>
+        <li class="keep"><a href="#contato" class="pill" data-magnetic>Contato</a></li>
+        <li class="keep"><button class="lang" id="langBtn" type="button" aria-label="Mudar idioma para inglês" title="Mudar idioma para inglês"><span class="on" data-l="pt">PT</span><span data-l="en">EN</span></button></li>
       </ul>
     </nav>
   </div>
@@ -929,13 +934,18 @@
 
   /* ---------- Frase do "Sobre" ---------- */
   var st = $('#statement');
-  var stWords = st.textContent.trim().split(/\s+/);
-  st.textContent = '';
-  var wEls = stWords.map(function (w, i) {
-    var s = document.createElement('span'); s.className = 'w'; s.textContent = w; st.appendChild(s);
-    if (i < stWords.length - 1) st.appendChild(document.createTextNode(' '));
-    return s;
-  });
+  var stPT = st.textContent.trim();
+  var wEls = [];
+  function buildStatement(text) {
+    var stWords = text.trim().split(/\s+/);
+    st.textContent = '';
+    wEls = stWords.map(function (w, i) {
+      var s = document.createElement('span'); s.className = 'w'; s.textContent = w; st.appendChild(s);
+      if (i < stWords.length - 1) st.appendChild(document.createTextNode(' '));
+      return s;
+    });
+  }
+  buildStatement(stPT);
 
   /* ---------- Efeitos de scroll ---------- */
   var nav = $('#nav'), bar = $('#progress'), flow = $('#flow'), stns = $$('.stn'), heroWrap = $('#hero .wrap');
@@ -974,7 +984,7 @@
   var copyBtn = $('#copyBtn'), copyOk = $('#copyOk'), email = 'caioramiroduarte@gmail.com';
   copyBtn.addEventListener('click', function () {
     function ok() {
-      copyOk.textContent = 'E-mail copiado!'; copyOk.classList.add('show');
+      copyOk.textContent = lang === 'en' ? 'Email copied!' : 'E-mail copiado!'; copyOk.classList.add('show');
       setTimeout(function () { copyOk.classList.remove('show'); }, 2200);
     }
     function fallback() {
@@ -987,6 +997,161 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(email).then(ok, fallback);
     else fallback();
   });
+
+
+  /* ---------- Idioma PT / EN ---------- */
+  var I18N = {
+  "Sobre": "About",
+  "Experiência": "Experience",
+  "Formação": "Education",
+  "Certificações": "Certifications",
+  "Especialidades": "Skills",
+  "Idiomas": "Languages",
+  "Contato": "Contact",
+  "Vamos conversar?": "Let's talk?",
+  "Vamos conversar": "Let's talk",
+  "Carregando desenho, escala 1:1": "Loading drawing, scale 1:1",
+  "Estudante de Engenharia de Produção": "Industrial Engineering Student",
+  "Foco em": "Focus on",
+  "Baixar currículo": "Download resume",
+  "Disponível para estágio / trainee": "Available for internship / trainee roles",
+  "Rio de Janeiro, RJ": "Rio de Janeiro, Brazil",
+  "Baker Hughes, desde 2025": "Baker Hughes, since 2025",
+  "Sourcing Indireto": "Indirect Sourcing",
+  "Excelência Operacional": "Operational Excellence",
+  "Projeto liderado": "Led project",
+  "Ficha técnica": "Technical data sheet",
+  "Curso": "Degree",
+  "Engenharia de Produção": "Industrial Engineering",
+  "Instituição": "Institution",
+  "Formatura": "Graduation",
+  "Previsão para dezembro de 2031": "Expected December 2031",
+  "Foco": "Focus",
+  "Sourcing Indireto, Excelência Operacional e Lean Manufacturing": "Indirect Sourcing, Operational Excellence and Lean Manufacturing",
+  "Português (nativo) e inglês (fluente)": "Portuguese (native) and English (fluent)",
+  "Busco": "Looking for",
+  "Estágio / Trainee, presencial, híbrido ou remoto": "Internship / Trainee program, on-site, hybrid or remote",
+  "Base": "Based in",
+  "Jovem Aprendiz em Indirect Sourcing": "Young Apprentice in Indirect Sourcing",
+  "2025 a presente": "2025 to present",
+  "Suprimentos": "Procurement",
+  "Logística": "Logistics",
+  "Chão de fábrica": "Shop floor",
+  "Indicadores": "KPIs",
+  "Melhoria contínua": "Continuous improvement",
+  "Gerenciamento completo de BIDs (cotação e equalização) no ecossistema SAP Ariba e formalização de BPOs (Blanket Purchase Orders).": "End-to-end management of BIDs (quotation and bid leveling) in the SAP Ariba ecosystem, and formalization of BPOs (Blanket Purchase Orders).",
+  "Emissão, monitoramento, abertura e fechamento de Ordens de Compra (POs) de logística nacional e internacional via sistema Oracle.": "Issuing, monitoring, opening and closing domestic and international logistics Purchase Orders (POs) in the Oracle system.",
+  "Desenvolvimento e implementação de soluções digitais corporativas, com fluxos de automação (workflows) customizados em Microsoft PowerApps.": "Development and implementation of corporate digital solutions, with custom automation workflows in Microsoft PowerApps.",
+  "Atuação presencial diária em sinergia com a operação e a engenharia de processos, acompanhando a cadeia de produção de tubos flexíveis do sistema FPS (Flexible Pipe System).": "Daily on-site work in close coordination with operations and process engineering, following the production chain of flexible pipes in the FPS (Flexible Pipe System).",
+  "Monitoramento ativo de métricas regulatórias e operacionais de Qualidade, Logística e HSE.": "Active monitoring of regulatory and operational metrics for Quality, Logistics and HSE.",
+  "Auxílio em projeto Yellow Belt liderado pela equipe de Engenharia de Projetos e equipe Lean.": "Support on a Yellow Belt project led by the Project Engineering and Lean teams.",
+  "Destaque de liderança": "Leadership highlight",
+  "Nomeado representante oficial dos jovens aprendizes na Planta de Niterói, liderando estrategicamente um projeto de melhoria contínua Green Belt e um Kaizen operacional.": "Appointed official representative of the young apprentices at the Niterói Plant, strategically leading a Green Belt continuous improvement project and an operational Kaizen.",
+  "Projeto Go & See": "Go & See Project",
+  "5 anos": "5 years",
+  "Bacharelado em andamento, previsão de formatura em dezembro de 2031.": "Bachelor's degree in progress, expected graduation in December 2031.",
+  "Estudos analíticos integrados voltados para Engenharia de Manufatura e Otimização Operacional.": "Integrated analytical studies focused on Manufacturing Engineering and Operational Optimization.",
+  "Concluído": "Completed",
+  "Ensino Médio Completo": "High School Diploma",
+  "Concluído em 2023.": "Completed in 2023.",
+  "Extensão Indústria 4.0": "Industry 4.0 Extension Course",
+  "Certificação Oficial Lean": "Official Lean Certification",
+  "6 itens": "6 items",
+  "7 itens": "7 items",
+  "3 itens": "3 items",
+  "Certificação Lean (FGV)": "Lean Certification (FGV)",
+  "Mapeamento Gemba & Kaizen": "Gemba Mapping & Kaizen",
+  "Qualidade & TI": "Quality & IT",
+  "Gestão da Qualidade (FM2S)": "Quality Management (FM2S)",
+  "Microsoft Excel Avançado": "Advanced Microsoft Excel",
+  "Microsoft Word Avançado": "Advanced Microsoft Word",
+  "Power BI Corporativo": "Corporate Power BI",
+  "Programação Python": "Python Programming",
+  "Análise Estatística, Minitab": "Statistical Analysis, Minitab",
+  "Competências": "Core Competencies",
+  "Gestão de Ordens (POs)": "Purchase Order (PO) Management",
+  "Métricas de Qualidade & HSE": "Quality & HSE Metrics",
+  "Básico": "Basic",
+  "Nativo": "Native",
+  "Português": "Portuguese",
+  "Inglês": "English",
+  "Fluente": "Fluent",
+  "Estou buscando estágio ou trainee em Engenharia de Produção, nos formatos presencial, híbrido ou remoto. Se tem uma vaga ou quer trocar uma ideia, me chame.": "I'm looking for an internship or trainee position in Industrial Engineering, on-site, hybrid or remote. If you have an opening or just want to chat, get in touch.",
+  "Copiar e-mail": "Copy email",
+  "Currículo (PDF)": "Resume (PDF)",
+  "Projeto": "Project",
+  "Portfólio profissional": "Professional portfolio",
+  "Desenhista": "Drawn by",
+  "Folha": "Sheet",
+  "Escala": "Scale",
+  "E-mail": "Email",
+  "Telefone": "Phone",
+  "Local": "Location",
+  "Data": "Date",
+  "Disponibilidade": "Availability",
+  "Estágio / Trainee: presencial, híbrido ou remoto": "Internship / Trainee: on-site, hybrid or remote",
+  "Caio Ramiro · Folha 1/1 · Escala 1:1": "Caio Ramiro · Sheet 1/1 · Scale 1:1",
+  "Voltar ao topo": "Back to top",
+  "Caio Ramiro, ir ao topo": "Caio Ramiro, back to top",
+  "Principal": "Main",
+  "Carimbo da prancha": "Drawing title block"
+};
+  var EN_STATEMENT = "Industrial Engineering student with early hands-on experience as a Young Apprentice at Baker Hughes, working in Indirect Sourcing, procurement and continuous improvement of manufacturing processes. Analytical, results-driven profile with leadership among young talent and strong command of ERP systems, Power BI and workflow automation.";
+  var EN_WORDS = ['Indirect Sourcing', 'Operational Excellence', 'Lean Manufacturing', 'Continuous improvement'];
+  var PT_WORDS = words.slice();
+  var lang = 'pt';
+  var tNodes = [], aNodes = [];
+  (function collect() {
+    var skip = '#statement, #typed, #today, #year, #preCount, #copyOk, #heroTitle, script, style';
+    var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null), n;
+    while ((n = w.nextNode())) {
+      var raw = n.nodeValue, key = raw.trim();
+      if (!key || !Object.prototype.hasOwnProperty.call(I18N, key)) continue;
+      if (n.parentElement && n.parentElement.closest(skip)) continue;
+      tNodes.push({ n: n, pt: raw, en: raw.replace(key, function () { return I18N[key]; }) });
+    }
+    $$('[aria-label]').forEach(function (el) {
+      var k = el.getAttribute('aria-label');
+      if (Object.prototype.hasOwnProperty.call(I18N, k)) aNodes.push({ el: el, pt: k, en: I18N[k] });
+    });
+  })();
+
+  var langBtn = $('#langBtn'), metaDesc = $('meta[name="description"]');
+  var META = {
+    pt: 'Portfólio de Caio Ramiro, estudante de Engenharia de Produção com experiência em Sourcing Indireto, Excelência Operacional e Lean Manufacturing na Baker Hughes.',
+    en: 'Portfolio of Caio Ramiro, Industrial Engineering student with experience in Indirect Sourcing, Operational Excellence and Lean Manufacturing at Baker Hughes.'
+  };
+  var TITLE = { pt: document.title, en: 'Caio Ramiro | Industrial Engineering Student' };
+
+  function setLang(l) {
+    lang = l;
+    var en = l === 'en';
+    tNodes.forEach(function (t) { t.n.nodeValue = en ? t.en : t.pt; });
+    aNodes.forEach(function (a) { a.el.setAttribute('aria-label', en ? a.en : a.pt); });
+    document.documentElement.lang = en ? 'en' : 'pt-BR';
+    document.title = TITLE[l];
+    metaDesc.setAttribute('content', META[l]);
+    $('#today').textContent = new Date().toLocaleDateString(en ? 'en-US' : 'pt-BR');
+    if (copyOk.textContent) copyOk.textContent = en ? 'Email copied!' : 'E-mail copiado!';
+
+    buildStatement(en ? EN_STATEMENT : stPT);
+    onScroll();
+
+    words = en ? EN_WORDS : PT_WORDS;
+    wi = 0; ci = 0; del = false;
+    if (typedOn) typedEl.textContent = reduce ? words.slice(0, 3).join(', ') : '';
+
+    $$('span', langBtn).forEach(function (s) { s.classList.toggle('on', s.getAttribute('data-l') === l); });
+    var lbl = en ? 'Switch language to Portuguese' : 'Mudar idioma para inglês';
+    langBtn.setAttribute('aria-label', lbl); langBtn.setAttribute('title', lbl);
+  }
+
+  langBtn.addEventListener('click', function () {
+    var next = lang === 'en' ? 'pt' : 'en';
+    setLang(next);
+    try { localStorage.setItem('cr-lang', next); } catch (e) {}
+  });
+  try { if (localStorage.getItem('cr-lang') === 'en') setLang('en'); } catch (e) {}
 
   $('#toTop').addEventListener('click', function () { window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); });
 })();
