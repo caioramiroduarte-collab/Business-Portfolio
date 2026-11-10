@@ -220,6 +220,12 @@
   .xp-card { position: sticky; top: 100px; border: 1px solid var(--line); background: var(--card); padding: 1.8rem 1.6rem; }
   .xp-card h3 { margin: 0; font-family: var(--disp); font-weight: 800; font-size: clamp(2.2rem, 4vw, 3rem); line-height: 1; text-transform: uppercase; }
   .xp-card .role2 { margin: .6rem 0 1.2rem; color: var(--text); font-weight: 500; }
+  .xp-card .role-item { margin-top: 1.1rem; }
+  .xp-card .role-item + .role-item { padding-top: 1.1rem; border-top: 1px dashed var(--line); }
+  .xp-card .role-item .role2 { margin: 0 0 .6rem; }
+  .xp-card .dot { display: inline-block; flex: none; width: 9px; height: 9px; border-radius: 50%; box-sizing: border-box; }
+  .xp-card .dot.done { background: var(--muted); }
+  .xp-card .dot.next { border: 2px solid var(--orange); }
   .xp-card .when { font-family: var(--mono); font-size: .9rem; color: var(--orange); display: inline-flex; align-items: center; gap: .55rem; }
   .flow { position: relative; padding-left: clamp(2.2rem, 5vw, 3.2rem); }
   .flow::before, .flow::after { content: ""; position: absolute; left: 9px; top: 12px; bottom: 12px; width: 2px; }
@@ -497,8 +503,14 @@
       <div class="xp">
         <aside class="xp-card crop rv">
           <h3>Baker Hughes</h3>
-          <p class="role2">Jovem Aprendiz em Indirect Sourcing</p>
-          <span class="when"><span class="live" style="display:inline-flex"><i></i></span>2025 a presente</span>
+          <div class="role-item">
+            <p class="role2">Estagiário em Indirect Sourcing</p>
+            <span class="when"><i class="dot next" aria-hidden="true"></i>A partir de dezembro de 2026</span>
+          </div>
+          <div class="role-item">
+            <p class="role2">Jovem Aprendiz em Indirect Sourcing</p>
+            <span class="when"><i class="dot done" aria-hidden="true"></i>2025 a outubro de 2026</span>
+          </div>
         </aside>
 
         <div>
@@ -1062,7 +1074,9 @@
   "Estágio / Trainee, presencial, híbrido ou remoto": "Internship / Trainee program, on-site, hybrid or remote",
   "Base": "Based in",
   "Jovem Aprendiz em Indirect Sourcing": "Young Apprentice in Indirect Sourcing",
-  "2025 a presente": "2025 to present",
+  "Estagiário em Indirect Sourcing": "Intern in Indirect Sourcing",
+  "A partir de dezembro de 2026": "From December 2026",
+  "2025 a outubro de 2026": "2025 to October 2026",
   "Suprimentos": "Procurement",
   "Logística": "Logistics",
   "Chão de fábrica": "Shop floor",
